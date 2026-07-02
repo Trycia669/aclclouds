@@ -82,11 +82,10 @@ class AclcloudsRenewal:
         except:
             return False
 
-    def get_credit(self,page):
-        page.wait_for_selector("p.text-primary-100", timeout=30000)
-        text = page.locator("p.text-primary-100").inner_text()
-        match = re.search(r"([\d,]+)", text)
-        return match.group(1) if match else None
+    def get_expiry_time(self, page, timeout=10000):
+        locator = page.locator(".projects-card-expiry .projects-expiry-value")    
+        locator.wait_for(state="visible", timeout=timeout)
+        return locator.inner_text().strip()
         
     # ================= RUN =================
     def run(self):
@@ -137,42 +136,46 @@ class AclcloudsRenewal:
                 }
             ])
 
+            self.log("✅ 注入Cookie成功")
             # ================= Project =================
             self.log("📂 进入续期面板")
             page.goto(PROJECT_URL, wait_until="domcontentloaded")
-            self.dump_debug(page, "project", "project loaded")
             self.human_wait()
+            #self.dump_debug(page, "project", "project loaded")
 
             if self.is_blocked(page):
                 self.dump_debug(page, "project", "BLOCKED")
                 return
 
             # ================= 点击Renew按钮 =================
-            self.log("🎯 点击Renew按钮")
+            self.log("🖱️ 点击Renew按钮")
             try:
                 page.wait_for_selector("button:has-text('Renew')", timeout=10000)
                 page.click("button:has-text('Renew')")
-                self.log("🎯 已点击Renew按钮")
-                self.dump_debug(page, "Renew", "Renew Clicked")
+                self.log("🖱️ 已点击Renew按钮")
                 self.human_wait()
+                #self.dump_debug(page, "Renew", "Renew Clicked")
             except:
-                self.dump_debug(page, "🚀Aclclouds 自动续期", "🕒当前无需续期")
+                time_text = get_expiry_time(self, page)
+                self.dump_debug(page, "🎉Aclclouds 自动续期", f"🕒当前无需续期\n🚀剩余使用时间：{time_text}")
                 return
 
             if self.is_blocked(page):
                 self.dump_debug(page, "Renew", "BLOCKED")
                 return
 
-            # ================= 点击验证按钮 =================
-            self.log("🎯 点击验证按钮")
+            # ================= 点击Verify按钮 =================
+            self.log("🖱️ 点击验证按钮")
             page.click(".auth-captcha-checkbox")
-            self.dump_debug(page, "Verify", "Verify Clicked")
             self.human_wait()
+            #self.dump_debug(page, "Verify", "Verify Clicked")
 
             if self.is_blocked(page):
                 self.dump_debug(page, "Verify", "BLOCKED")
                 return
 
+            time_text = get_expiry_time(self, page)
+            self.dump_debug(page, "🎉Aclclouds-自动续期", f"🕒续期完毕\n🚀剩余使用时间：{time_text}")
             self.log("✅ 流程完毕")
 
             browser.close()
