@@ -165,10 +165,10 @@ class AclcloudsRenewal:
                 # 5.点击Verify按钮
                 selector = ".auth-captcha-checkbox"
                 self.log("🖱️ 点击验证按钮")
-                self.sb.wait_for_element_visible(selector, timeout=10)
+                sb.wait_for_element_visible(selector, timeout=10)
                 # 点击（SeleniumBase 默认自动处理可点击状态）
                 self.log("✅ 找到Verify按钮")
-                self.sb.click(selector)
+                sb.click(selector)
                 time.sleep(5)
                 time_after = self.get_expiry_time(sb)
                 verify_screenshot = f"{self.screenshot_dir}/verify.png"
