@@ -168,7 +168,7 @@ class AclcloudsRenewal:
                     f"🕒当前无需续期\n🚀剩余使用时间：{time_text}"
                 )
                 return
-            self.dump_debug(page, "renew", "renew clicked")
+                
             if self.is_blocked(page):
                 self.dump_debug(page, "Renew", "BLOCKED")
                 return
