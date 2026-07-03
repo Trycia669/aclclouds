@@ -148,27 +148,17 @@ class AclcloudsRenewal:
                 return
 
             self.log("🖱️ 点击Renew按钮")
-
-            try:
-                renew = page.locator("button:has-text('Renew')")
-
-                if renew.is_visible():
-                    renew.click()
-                    self.log("🖱️ 已点击Renew按钮")
-                    self.human_wait()
-                    return
-                else:
-                    raise Exception("Renew not visible")
-
-            except:
-                time_text = self.get_expiry_time(page)
-                self.dump_debug(
-                    page,
-                    "🎉Aclclouds 自动续期",
-                    f"🕒当前无需续期\n🚀剩余使用时间：{time_text}"
-                )
-                return
-                
+            self.log("🖱️ 查找Renew按钮")
+            renew = page.locator("button:has-text('Renew')").first
+            renew.wait_for(state="visible", timeout=10000)
+            self.log("🖱️ 滚动到Renew按钮")
+            renew.scroll_into_view_if_needed()
+            self.human_wait()
+            self.log("🖱️ 执行点击Renew")
+            renew.click(timeout=10000, force=True)
+            self.log("🖱️ 已点击Renew按钮")
+            time_text = self.get_expiry_time(page)
+            self.dump_debug(page,"🎉Aclclouds 自动续期",f"🕒当前无需续期\n🚀剩余使用时间：{time_text}")          
             if self.is_blocked(page):
                 self.dump_debug(page, "Renew", "BLOCKED")
                 return
