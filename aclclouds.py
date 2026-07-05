@@ -221,23 +221,7 @@ class AclcloudsRenewal:
                 sb.save_screenshot(login_screenshot)
                 self.send_telegram_notify("discord", login_screenshot)
                 time.sleep(5)
-                #self.oauth_debug(sb)
-                wait = WebDriverWait(sb.driver, 20)
-                btn = wait.until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, "//button[contains(., 'Authorize')]")
-                    )
-                )
-                sb.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", btn)
-                time.sleep(1)
-                try:
-                    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Authorize')]")))
-                    btn.click()
-                except:
-                    try:
-                        ActionChains(sb.driver).move_to_element(btn).click().perform()
-                    except:
-                        sb.driver.execute_script("arguments[0].click();", btn)
+                self.oauth_debug(sb)
                 self.log("✅ Discord登录成功")
                 time.sleep(5)
                 login_screenshot = f"{self.screenshot_dir}/login.png"
