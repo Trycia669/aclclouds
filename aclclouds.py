@@ -143,7 +143,6 @@ class AclcloudsRenewal:
                     self.log("⏰未到续期时间,流程结束.")
                     self.send_telegram_notify("🎉Aclclouds 自动续期\n⏰未到续期时间,流程结束", "")
                     return
-                else:
                 # 1. 进入Home页面
                 self.log("📂 进入Home页面并点击My services")
                 sb.uc_open_with_reconnect(HOME_URL, reconnect_time=25)
