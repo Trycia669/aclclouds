@@ -19,7 +19,7 @@ print(f"[DEBUG] Env DISPLAY: {os.environ.get('DISPLAY')}")
 print(f"[DEBUG] Env XAUTHORITY: {os.environ.get('XAUTHORITY')}")
 
 from seleniumbase import SB
-from datetime import datetime, timezone
+from selenium.webdriver.common.action_chains import ActionChains
 
 # ================= 配置区域 =================
 PROXY_URL = os.getenv("PROXY", "")  # 代理
@@ -189,6 +189,31 @@ class AclcloudsRenewal:
                 clickverify_screenshot = f"{self.screenshot_dir}/clickverify.png"
                 sb.save_screenshot(clickverify_screenshot)
                 self.send_telegram_notify("已点击验证按钮", clickverify_screenshot)
+
+                # 6.查找I am not a robot坐标并点击
+                el = sb.find_element(
+                    "xpath",
+                    "//*[contains(text(),'I am not a robot')]"
+                )
+                rect = el.rect
+                x = rect["x"] + rect["width"] / 2
+                y = rect["y"] + rect["height"] / 2
+                print("验证码坐标:", x, y)
+                actions = ActionChains(sb.driver)
+                actions.move_to_element_with_offset(
+                    el,
+                    0,
+                    0
+                )
+                actions.pause(0.3)
+                actions.click()
+                actions.perform()
+                time.sleep(5)
+                robot_screenshot = f"{self.screenshot_dir}/robot.png"
+                sb.save_screenshot(robot_screenshot)
+                self.send_telegram_notify("已I am not a robot按钮", robot_screenshot)
+                return
+                
                 if not sb.is_element_visible("text=Server renewed successfully"):
                     self.log("🔥 开始执行验证码破解")
                     for i in range(20):
