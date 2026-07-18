@@ -156,7 +156,7 @@ class AclcloudsRenewal:
 
         self.log("🔐 OAuth 页面分析开始")
 
-        for i in range(20):
+        for i in range(40):
 
             self.log(f"🔍 分析 {i+1}/20")
             time.sleep(2)
@@ -205,15 +205,33 @@ class AclcloudsRenewal:
 
 
                         if text in [
+                            "继续滚动……",
+                            "Continue",
+                        ]:
+
+                            self.log("🟡 发现继续滚动按钮")
+
+                            ActionChains(
+                                sb.driver
+                            ).move_to_element(
+                                btn
+                            ).click().perform()
+
+                            self.log("✅ 已点击继续滚动")
+
+                            time.sleep(5)
+
+                            break
+
+
+
+                        if text in [
                             "授权",
                             "Authorize",
                             "Authorise"
                         ]:
 
-                            self.log(
-                                "🟢 找到授权按钮"
-                            )
-
+                            self.log("🟢 找到授权按钮")
 
                             sb.execute_script(
                                 """
@@ -226,7 +244,6 @@ class AclcloudsRenewal:
 
                             time.sleep(1)
 
-
                             ActionChains(
                                 sb.driver
                             ).move_to_element(
@@ -238,10 +255,9 @@ class AclcloudsRenewal:
                                 "✅ OAuth授权点击完成"
                             )
 
-
                             time.sleep(8)
 
-                            break
+                           break
 
 
                     except Exception as e:
