@@ -201,10 +201,9 @@ class AclcloudsRenewal:
                             )
 
 
-                            sb.execute_script(
-                                "arguments[0].click();",
-                                btn
-                            )
+                            sb.execute_script("""
+                            document.querySelectorAll("button")[1].click();
+                            """)
 
 
                             self.log(
@@ -232,10 +231,9 @@ class AclcloudsRenewal:
                             )
 
 
-                            sb.execute_script(
-                                "arguments[0].click();",
-                                btn
-                            )
+                            sb.execute_script("""
+                            document.querySelectorAll("button")[1].click();
+                            """)
 
 
                             self.log(
