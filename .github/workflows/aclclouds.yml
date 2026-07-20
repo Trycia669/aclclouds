@@ -2,8 +2,8 @@ name: Aclclouds-Renew
 
 on:
   workflow_dispatch:
-  #schedule:
-   # - cron: '* */8 * * *'
+  schedule:
+    - cron: '0 */12 * * *'
 
 jobs:
   run_renewal:
